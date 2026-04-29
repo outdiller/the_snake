@@ -61,29 +61,31 @@ class GameObject:
         pass
 
 class Apple(GameObject):
-    apple_color = (255, 0, 0)
+    """Класс, описывающий яблоко."""
 
-    super()__init__(position=None , body_color=apple_color)
-
+    def __init__(self):
+        """Инициализация яблока со случайной позицией."""
+        super().__init__(body_color=APPLE_COLOR)
         self.randomize_position()
 
-    def randomize_position()
-    
-        max_x = 640 - 20
-        max_y = 480 - 20
-    
-        x.random.randrage(o, max_x + 1, 20)
-        y.random.randrage(o, max_y + 1, 20)
-        self.position = (x,y)
+    def randomize_position(self):
+        """Устанавливает случайное положение яблока на игровом поле."""
+        self.position = (
+            randint(0, GRID_WIDTH - 1) * GRID_SIZE,
+            randint(0, GRID_HEIGHT - 1) * GRID_SIZE
+        )
+
     def draw(self, surface):
+        """Отрисовывает яблоко на игровой поверхности."""
         rect = pygame.Rect(
             self.position[0],
             self.position[1],
-            20,
-            20
+            GRID_SIZE,
+            GRID_SIZE
         )
         pygame.draw.rect(surface, self.body_color, rect)
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
+
 
 
 class Snake(GameObject):
@@ -163,16 +165,33 @@ class Snake(GameObject):
 
 
 def main():
-    # Инициализация PyGame:
-    pygame.init()
-    # Тут нужно создать экземпляры классов.
-    ...
 
-    # while True:
-    #     clock.tick(SPEED)
+snake = Snake()
+    apple = Apple()
 
-        # Тут опишите основную логику игры.
-        # ...
+    while True:
+        clock.tick(SPEED)
+
+        # Обрабатываем ввод пользователя
+        handle_keys(snake)
+
+        # Обновляем направление движения
+        snake.update_direction()
+
+        # Двигаем змейку
+        snake.move()
+
+        # Проверяем, съела ли змейка яблоко
+        if snake.get_head_position() == apple.position:
+            snake.length += 1
+            apple.randomize_position()
+
+        # Отрисовываем объекты
+        snake.draw(screen)
+        apple.draw(screen)
+
+        # Обновляем экран
+        pygame.display.update()
 
 
 if __name__ == '__main__':
